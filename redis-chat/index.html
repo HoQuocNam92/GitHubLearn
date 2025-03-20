@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redis Chat</title>
+</head>
+
+<body>
+    <h2>🔴 Real-time Chat</h2>
+    <div id="chat"></div>
+    <input type="text" id="message" placeholder="Nhập tin nhắn..." />
+    <button onclick="sendMessage()">Gửi</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+    <script>
+        const socket = io("http://localhost:3000");
+
+        socket.on("receiveMessage", (message) => {
+            const data = document.getElementById("chat");
+            const newData = document.createElement("div");
+            newData.innerText = `${message.user} ${message.text}`;
+            data.appendChild(newData);
+        })
+        function sendMessage() {
+            const message = document.getElementById("message").value;
+            socket.emit("sendMessage", { user: "anonymous", text: message });
+            document.getElementById("message").value = "";
+        }
+    </script>
+</body>
+
+</html>
